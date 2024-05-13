@@ -1,0 +1,233 @@
+<div class='loader-wrap'>
+    <div class="loader-wrap-bg"></div>
+    <div class="loader-wrap-wrap">
+        <div class="loader-wrap-text"><span data-load-perc>100</span>%</div>
+        <svg width="1658" height="830" viewBox="0 0 1658 830" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g opacity="0.5">
+
+            <path d="M331.59 0.142944H0C0 457.987 371.156 829.143 829 829.143C1286.84 829.143 1658 457.987 1658 0.142944H1326.39C1326.39 274.849 1103.7 497.542 828.99 497.542C554.284 497.542 331.59 274.849 331.59 0.142944Z" fill="white"/>
+            <!-- <path d="M0 0.142944V-16.4371H-16.58V0.142944H0ZM331.59 0.142944L348.17 0.142917V-16.4371H331.59V0.142944ZM1658 0.142944H1674.58V-16.4371H1658V0.142944ZM1326.39 0.142944V-16.4371H1309.81V0.142915L1326.39 0.142944ZM0 16.7229H331.59V-16.4371H0V16.7229ZM829 812.563C380.313 812.563 16.58 448.83 16.58 0.142944H-16.58C-16.58 467.144 361.999 845.723 829 845.723V812.563ZM1641.42 0.142944C1641.42 448.83 1277.69 812.563 829 812.563V845.723C1296 845.723 1674.58 467.144 1674.58 0.142944H1641.42ZM1326.39 16.7229H1658V-16.4371H1326.39V16.7229ZM1309.81 0.142915C1309.81 265.692 1094.54 480.962 828.99 480.962V514.122C1112.85 514.122 1342.97 284.006 1342.97 0.142974L1309.81 0.142915ZM828.99 480.962C563.44 480.962 348.17 265.692 348.17 0.142917L315.01 0.142972C315.01 284.006 545.127 514.122 828.99 514.122V480.962Z" fill="white" mask="url(#path-1-inside-1_325_5691)"/> -->
+            </g>
+            </svg>
+    </div>
+</div>
+
+
+<style>
+
+    .loader-wrap {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding-top: 109px;
+    }
+    .loader-wrap.hidden {
+        display: none;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+
+    .loader-wrap-wrap {
+        
+    }
+    .loader-wrap-bg {
+        background-image: url(./assets/images/loader-bg.jpg);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .loader-wrap-wrap {
+        /* transition: transform 1s ease-out, opacity .15s ease-out; */
+        transform-origin: 50% bottom;
+        transform: scale(1);
+        width: 100%;
+        margin-top: auto;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: flex-end;
+    }
+
+    .loader-wrap svg {
+        width: 100%;
+        height: auto;
+    }
+
+    .loader-wrap-text {
+        position: absolute;
+        left: 50%;
+        top: 20px;
+        transform: translateX(-50%);
+        font-weight: 400;
+        font-size: 236.857px;
+        line-height: 90%;
+        /* or 213px */
+
+        display: flex;
+        align-items: center;
+        text-align: center;
+        text-transform: uppercase;
+
+        color: #FFFFFF;
+    }
+    @media screen and (max-width:1024px){
+        .loader-wrap-text {
+            font-size: 72px;
+        }
+    }
+</style>
+
+<style data-page-elements-style-for-loader>
+    .home-screen1__arrow {
+        opacity: 0;
+    }
+</style>
+
+<script src="./assets/scripts/gsap.min.js"></script>
+
+<script>
+    console.log(gsap);
+    let loaderStatus = {
+    isCounterAnim: true,
+    isDOMLoaded: false,
+}
+if (sessionStorage.getItem('visit') !== null) {
+    
+    document.querySelector('.loader-wrap').classList.add('hidden');
+    document.querySelector('.loader-wrap').style.display = 'none';
+
+    document.querySelectorAll('[data-page-elements-style-for-loader]').forEach(el => el.remove())
+    loaderStatus.isCounterAnim = false;
+    loaderStatus.isCounterAnim = true;
+} else {
+    sessionStorage.setItem('visit', true);
+}
+function scaleTo1(el) {
+    const path = el;
+    let value = 1;
+    const finishVal = +el.dataset.finishVal || 0;
+    function render(value) {
+        
+        if (value <= 0.15) {
+            // el.parentElement.classList.add('transformed');
+
+        }
+        if(value <= finishVal) {
+            document.querySelector('.loader-wrap').classList.add('hidden');
+            // document.querySelector('.loader>svg').style.opacity = 0;
+            loaderStatus.isCounterAnim = false;
+            path.style.transform = `scaleY(${finishVal})`;
+            return;
+        };
+        path.style.transform = `scaleY(${value})`;
+        const newValue = value - 0.01;
+        requestAnimationFrame(() => {
+            render(newValue);
+        });
+    }
+
+    render(value);
+}
+
+
+function digitLoader() {
+    const el = document.querySelector('[data-load-perc]');
+    let value = 0;
+
+    function render(value) {
+        if (value >= 101) {
+
+            loaderStatus.isCounterAnim = false;
+            return;
+        };
+        let newValue = value + 1;
+        el.textContent = value;
+        requestAnimationFrame(() => {
+            render(newValue);
+        })
+    }
+    // document.querySelector('.loader__lines').classList.remove('gradient');
+    
+    // linesTo0();
+    render(value);
+}
+    digitLoader();
+
+    function linesTo0() {
+        for (let index = 0; index < document.querySelectorAll('.loader path:not(.static)').length; index++) {
+            const element = document.querySelectorAll('.loader path:not(.static)')[index];
+            scaleTo1(element);
+        }
+    }
+
+    let interval = setInterval(() => {
+        if (loaderStatus.isCounterAnim === false && loaderStatus.isDOMLoaded === true) {
+            const arrow = document.querySelector('.home-screen1__arrow');
+            const bottom = 
+                arrow  ? 
+                (window.innerHeight - arrow.getBoundingClientRect().bottom) * -1: 
+                0;
+            gsap.timeline()
+                .to('.loader-wrap-wrap', {
+                    scale: 71/window.innerWidth
+                })
+                .to('.loader-wrap-wrap', {
+                    y: bottom,
+                    ease: 'expo.out'
+                }, '<')
+                .to('.loader-wrap-wrap path', {
+                    stroke: 'white',
+                    fill: 'transparent',
+                    strokeWidth: '40px',
+                })
+                .to('.loader-wrap-bg', {
+                    autoAlpha: 0
+                })
+                .fromTo('.home-screen1__arrow', {
+                    autoAlpha: 0,
+                }, {
+                    autoAlpha: 1,
+                    ease: 'power4.in',
+                    duration: 0.25,
+
+                },'<')
+                .to('.loader-wrap-text', {
+                    autoAlpha: 0,
+                    ease: 'power4.out',
+                    duration: 0.25,
+                }, '<')
+                .to('.loader-wrap-wrap svg', {
+                    autoAlpha: 0,
+                    ease: 'power4.out',
+                    duration: 0.25,
+                }, '<')
+                .add(() => {
+                    document.querySelector('[data-page-elements-style-for-loader]').remove();
+                    document.querySelector('.loader-wrap').classList.add('hidden');
+                    clearInterval(interval);
+                    window.dispatchEvent(new Event('preloaderOff'));
+                });      
+            clearInterval(interval);
+        }
+    }, 100);
+    window.addEventListener('DOMContentLoaded',function(evt){
+        loaderStatus.isDOMLoaded = true;
+    });
+</script>
